@@ -1,0 +1,128 @@
+# Docker-compose provided by LinIT (Kevin Allioli)
+# Last update : 28/04/2023
+
+# Environment variables to declare :
+#     - SERVICE : service name (example : keycloack)
+#     - KC_USER : keycloack admin username 
+#     - KC_PASSWORD : keycloack admin password
+#     - DB_HOST : database hostname (example : mariadb)
+#     - DB_ROOT_PASS : root user password
+#     - DB_NAME : database name (example : keycloack)
+#     - DB_USER : database user (example : keycloack)
+#     - DB_PASS : database password
+#     - DB_VENDOR : database engine type (example : postgresql, mariadb...)
+#     - FQDN : fully qualified domain name (example : auth.domain.tld)
+
+# Work with Portainer
+
+version: "3."
+services:
+  db:
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: $DB_ROOT_PASS
+      MARIADB_DATABASE: $DB_NAME
+      MARIADB_USER: $DB_USER
+      MARIADB_PASSWORD: $DB_PASS
+    healthcheck:
+      test: mysqladmin ping -h localhost -u root --password=$DB_ROOT_PASS
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+        - node.labels.general == true
+      update_config:
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+      labels:
+        - traefik.enable=false
+    volumes:
+      - $DATA_LOCATION/db:/var/lib/mysql
+    networks:
+      - network
+
+  app:
+    image: jboss/keycloak
+    environment:
+      KEYCLOAK_USER: $KC_USER
+      KEYCLOAK_PASSWORD: $KC_PASSWORD
+      PROXY_ADDRESS_FORWARDING: 'true'
+      DB_ADDR: db
+      DB_DATABASE: $DB_NAME
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASS
+      DB_VENDOR: $DB_TYPE
+    healthcheck:
+      test: curl --fail http://localhost:8080/auth/realms/master
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 2m
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+        - node.labels.general == true
+      update_config:
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik_network
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.$SERVICE.entrypoints=https
+        - traefik.http.routers.$SERVICE.rule=Host(`$FQDN`)
+        - traefik.http.services.$SERVICE.loadbalancer.server.port=8080
+    depends_on:
+      - db
+    networks:
+      - traefik_network
+      - network
+    
+  backup:
+    image: tiredofit/db-backup
+    environment:
+      DB_TYPE: mariadb
+      DB_HOST: db
+      DB_NAME: $DB_NAME
+      DB_USER: $DB_USER
+      DB_PASS: "$DB_PASS"
+      DB_DUMP_FREQ: 1440
+      DB_DUMP_BEGIN: 0000
+      DB_CLEANUP_TIME: 8640
+      CHECKSUM: SHA1
+      COMPRESSION: ZSTD
+      SPLIT_DB: "FALSE"
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+        - node.labels.general == true
+      update_config:
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+      labels:
+        - traefik.enable=false
+    volumes:
+      - $DATA_LOCATION/backup:/backup
+     #- ./post-script.sh:/assets/custom-scripts/post-script.sh
+    depends_on:
+      - db
+    networks:
+      - network
+
+networks:
+  traefik_network:
+    external: true
+  network:
+    driver: overlay
+    attachable: true
