@@ -283,7 +283,6 @@
             "name": "FQDN",
             "label": "Fully qualified domain name",
             "description": "example : auth.domain.tld"
-        }
         }]
     },
     {
