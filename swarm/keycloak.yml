@@ -20,12 +20,12 @@ services:
   db:
     image: mariadb
     environment:
-      MARIADB_ROOT_PASSWORD: $DB_ROOT_PASS
+      MARIADB_ROOT_PASSWORD: $DB_PASS
       MARIADB_DATABASE: $DB_NAME
       MARIADB_USER: $DB_USER
       MARIADB_PASSWORD: $DB_PASS
     healthcheck:
-      test: mysqladmin ping -h localhost -u root --password=$DB_ROOT_PASS
+      test: mysqladmin ping -h localhost -u root --password=$DB_PASS
       interval: 10s
       timeout: 5s
       retries: 3
