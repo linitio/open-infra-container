@@ -1,0 +1,45 @@
+# Docker-compose provided by Kevin Allioli
+# Last update : 01/05/2023
+
+# Environment variables to declare :
+#     - SERVICE : name of the service (example : chat-with-gpt)
+#     - URL_LOKI : loki service URL (example : http://ip:3100/loki/api/v1/push)
+#     - FQDN : fully qualified domain name (example : gpt.domain.tld)
+#     - DATA_LOCATION : files downloaded location (example /app/"service")
+
+# Work with Portainer
+
+version: '3.9'
+services:
+  app:
+    image: ghcr.io/cogentapps/chat-with-gpt:release
+    healthcheck:
+      test: curl --connect-timeout 15 --max-time 100 --silent --show-error --fail "http://localhost:3000" > /dev/null
+      interval: 1m
+      timeout: 30s
+      retries: 3
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+        - node.labels.general == true
+      update_config:
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik_network
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.$SERVICE.entrypoints=https
+        - traefik.http.routers.$SERVICE.rule=Host(`$FQDN`)
+        - traefik.http.services.$SERVICE.loadbalancer.server.port=3000
+    volumes:
+      - $DATA_LOCATION:/app/data
+    networks:
+      - traefik_network
+
+networks:
+  traefik_network:
+    external: true      

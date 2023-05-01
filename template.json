@@ -2,6 +2,37 @@
     "version": "2",
     "templates": [{
         "type": 2,
+        "title": "Chat with GPT",
+        "description": "Chat with GPT is an open-source, unofficial ChatGPT app with extra features and more ways to customize your experience.",
+        "note": "i<p>Application website : <a href=\"https:\/\/github.com\/cogentapps\/ichat-with-gpt\" target=\"_blank\" rel=\"noopener\">github.com/icogentapps/ichat-with-gpt<\/a>",
+        "categories": [
+            "Atificial Inteligence"
+        ],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/linitio/open-infra-container/main/img/chat_with_gpt_logo.png",
+        "repository": {
+            "stackfile": "swarm/chat-with-gpt.yml",
+            "url": "https://github.com/linitio/open-infra-container"
+        },
+        "env": [{
+            "name": "SERVICE",
+            "label": "Service name",
+            "description": "example: chat-with-gpt"
+        },
+        {
+            "name": "DATA_LOCATION",
+            "label": "Data location",
+            "description": "example: /apps/'service'",
+            "default": "/srv/chat-with-gpt"
+        },
+        {
+            "name": "FQDN",
+            "label": "Fully qualified domain name",
+            "description": "example : gpt.domain.tld"
+        }]
+    },
+    {
+        "type": 2,
         "title": "Gitea",
         "description": "Code hosting utility",
             "note": "<p>Application website : <a href=\"https:\/\/gitea.io\/\" target=\"_blank\" rel=\"noopener\">gitea.io<\/a>",
