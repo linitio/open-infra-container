@@ -671,6 +671,37 @@
     },
     {
         "type": 2,
+        "title": "Uptime-Kuma",
+        "description": "A self-hosted monitoring tool like Uptime Robot.",
+        "note": "i<p>Application website : <a href=\"https:\/\/github.com\/louislam\/uptime-kuma\" target=\"_blank\" rel=\"noopener\">github.com/louislam/uptime-kuma<\/a>",
+        "categories": [
+            "monitoring"
+        ],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/linitio/open-infra-container/main/img/uptime_kuma_logo.png",
+        "repository": {
+            "stackfile": "swarm/uptime-kuma.yml",
+            "url": "https://github.com/linitio/open-infra-container"
+        },
+        "env": [{
+            "name": "SERVICE",
+            "label": "Service name",
+            "description": "example: uptime-kuma"
+        },
+        {
+            "name": "DATA_LOCATION",
+            "label": "Data location",
+            "description": "example: /apps/'service'",
+            "default": "/srv/uptime-kuma"
+        },
+        {
+            "name": "FQDN",
+            "label": "Fully qualified domain name",
+            "description": "example : uptime-kuma.domain.tld"
+        }]
+    },
+    {
+        "type": 2,
         "title": "WikiJS",
         "description": "Wiki application written in NodeJS",
         "note": "<p>Application website : <a href=\"https:\/\/js.wiki\/\" target=\"_blank\" rel=\"noopener\">js.wiki<\/a>",
