@@ -1,0 +1,61 @@
+{
+	"version": "2",
+	"templates": [{
+        "type": 3,
+        "title": "Plex",
+        "description": "Media server",
+	    "note": "<p>Application website : <a href=\"https:\/\/plex.tv\/\" target=\"_blank\" rel=\"noopener\">plex.tv<\/a>",
+        "categories": [
+		    "Media management"
+        ],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/linitio/open-infra-container/main/img/plex_logo.png",
+        "repository": {
+            "stackfile": "docker/plex.yml",
+            "url": "https://github.com/linitio/open-container-infra"
+        },
+        "env": [{
+            "name": "SERVICE",
+            "label": "Service name",
+            "description": "example: plex"
+        },
+        {
+            "name": "VERSION",
+            "label": "Select version",
+            "description": "example: latest",
+            "default": "latest"
+        },
+        {
+            "name": "PUID",
+            "label": "User plex id",
+            "description": "1001"
+        },
+        {
+            "name": "PGID",
+            "label": "User group plex id",
+            "description": "1001"
+        },
+        {
+            "name": "TZ",
+            "label": "Service time zone",
+            "description": "(example : Europe/Paris)"
+        },
+        {
+            "name": "CONFIG_DATA_LOCATION",
+            "label": "Service config data location",
+            "description": "example /app/ service"
+        },
+        {
+            "name": "DATA_LOCATION",
+            "label": "Service data location",
+            "description": "example /app/ service"
+        },
+        {
+            "name": "TRANSCODE_DATA_LOCATION",
+            "label": "Data transcode location",
+            "description": "/app "
+        }]
+    }
+        
+    ]
+}
