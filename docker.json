@@ -12,7 +12,7 @@
         "logo": "https://raw.githubusercontent.com/linitio/open-infra-container/main/img/plex_logo.png",
         "repository": {
             "stackfile": "docker/plex.yml",
-            "url": "https://github.com/linitio/open-container-infra"
+            "url": "https://github.com/linitio/open-infra-container"
         },
         "env": [{
             "name": "SERVICE",
@@ -23,7 +23,7 @@
             "name": "VERSION",
             "label": "Select version",
             "description": "example: latest",
-            "default": "latest"
+            "default": "docker"
         },
         {
             "name": "PUID",

@@ -16,7 +16,7 @@
 version: '3.9'
 services:
   plex:
-    image: ghcr.io/linuxserver/plex
+    image: lscr.io/linuxserver/plex:latest
     container_name: $SERVICE
     restart: unless-stopped
     environment:
