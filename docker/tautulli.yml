@@ -1,0 +1,37 @@
+# Docker-compose provided by Kevin Allioli
+# Last update : 03/05/2023
+
+# Environment variables to declare :
+#     - SERVICE : name of the service (example : tautulli)
+#     - PUID : system user id (example : 1001)
+#     - PGID : system group id (example : 1001)
+#     - TZ : container time zone (example : Europe/Paris)
+#     - DATA_LOCATION : location of service data (example /app/"service")
+
+# Work with Portainer
+
+---
+version: "3.9"
+services:
+  tautulli:
+    image: lscr.io/linuxserver/tautulli:latest
+    container_name: $SERVICE
+    restart: unless-stopped
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+    volumes:
+      - $DATA_LOCATION:/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.$SERVICE.entrypoints=https"
+      - "traefik.http.routers.$SERVICE.rule=Host(`$FQDN`)"
+      - "traefik.http.services.$SERVICE.loadbalancer.server.port=8181"
+      - "traefik.docker.network=app-network"
+    networks:
+      - app-network
+      
+networks:
+  app-network:
+    external: true

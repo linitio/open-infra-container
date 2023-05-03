@@ -3,10 +3,10 @@
 	"templates": [{
         "type": 3,
         "title": "Plex",
-        "description": "Media server",
+        "description": "Plex organizes video, music and photos from personal media libraries and streams them to smart TVs, streaming boxes and mobile devices.",
 	    "note": "<p>Application website : <a href=\"https:\/\/plex.tv\/\" target=\"_blank\" rel=\"noopener\">plex.tv<\/a>",
         "categories": [
-		    "Media management"
+		    "multimedia"
         ],
         "platform": "linux",
         "logo": "https://raw.githubusercontent.com/linitio/open-infra-container/main/img/plex_logo.png",
@@ -55,7 +55,46 @@
             "label": "Data transcode location",
             "description": "/app "
         }]
-    }
-        
-    ]
+    },
+
+    {
+        "type": 3,
+        "title": "Tautulli",
+        "description": "A python based web application for monitoring, analytics and notifications for Plex Media Server.",
+	    "note": "<p>Application website : <a href=\"https:\/\/tautulli.com\/\" target=\"_blank\" rel=\"noopener\">tautulli.com<\/a>",
+        "categories": [
+		    "multimedia"
+        ],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/linitio/open-infra-container/main/img/tautulli_logo.png",
+        "repository": {
+            "stackfile": "docker/tautulli.yml",
+            "url": "https://github.com/linitio/open-infra-container"
+        },
+        "env": [{
+            "name": "SERVICE",
+            "label": "Service name",
+            "description": "example: tautulli"
+        },
+        {
+            "name": "PUID",
+            "label": "User plex id",
+            "description": "1001"
+        },
+        {
+            "name": "PGID",
+            "label": "User group plex id",
+            "description": "1001"
+        },
+        {
+            "name": "TZ",
+            "label": "Service time zone",
+            "description": "(example : Europe/Paris)"
+        },
+        {
+            "name": "DATA_LOCATION",
+            "label": "Service data location",
+            "description": "example /app/ service"
+        }]
+    }]
 }
