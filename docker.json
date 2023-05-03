@@ -95,6 +95,11 @@
             "name": "DATA_LOCATION",
             "label": "Service data location",
             "description": "example /app/ service"
+        },
+        {
+            "name": "FQDN",
+            "label": "Fully qualified domain name",
+            "description": "example : tautulli.domain.tld"
         }]
     }]
 }

@@ -7,7 +7,7 @@
 #     - PGID : system group id (example : 1001)
 #     - TZ : container time zone (example : Europe/Paris)
 #     - DATA_LOCATION : location of service data (example /app/"service")
-
+#     - FQDN : fully qualified domain name (example : tautulli.domain.tld)
 # Work with Portainer
 
 ---
@@ -31,7 +31,7 @@ services:
       - "traefik.docker.network=app-network"
     networks:
       - app-network
-      
+
 networks:
   app-network:
     external: true
