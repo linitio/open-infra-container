@@ -21,12 +21,12 @@
         },
         {
             "name": "PUID",
-            "label": "User plex id",
+            "label": "User filebrowser id",
             "description": "1001"
         },
         {
             "name": "PGID",
-            "label": "User group plex id",
+            "label": "User group filebrowser id",
             "description": "1001"
         },
         {
@@ -116,7 +116,56 @@
             "description": "/app "
         }]
     },
-
+    {
+        "type": 3,
+        "title": "Pyload-NG",
+        "description": "A python based web application for monitoring, analytics and notifications for Plex Media Server.",
+	    "note": "<p>Application website : <a href=\"https:\/\/tautulli.com\/\" target=\"_blank\" rel=\"noopener\">tautulli.com<\/a>",
+        "categories": [
+		    "utility"
+        ],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/linitio/open-infra-container/main/img/pyload_logo.png",
+        "repository": {
+            "stackfile": "docker/pyload-ng.yml",
+            "url": "https://github.com/linitio/open-infra-container"
+        },
+        "env": [{
+            "name": "SERVICE",
+            "label": "Service name",
+            "description": "example: pyload-ng"
+        },
+        {
+            "name": "PUID",
+            "label": "User pyload id",
+            "description": "1001"
+        },
+        {
+            "name": "PGID",
+            "label": "User group pyload id",
+            "description": "1001"
+        },
+        {
+            "name": "TZ",
+            "label": "Service time zone",
+            "description": "(example : Europe/Paris)"
+        },
+        {
+            "name": "DATA_LOCATION",
+            "label": "Service data location",
+            "description": "example : /app/service"
+        },
+        {
+            "name": "DOWNLOAD_LOCATION",
+            "label": "Downloaded data location",
+            "description": "example : /app/service/downloads"
+        },
+        {
+            "name": "FQDN",
+            "label": "Fully qualified domain name",
+            "description": "example : tautulli.domain.tld"
+        }]
+    },
     {
         "type": 3,
         "title": "Tautulli",
@@ -138,12 +187,12 @@
         },
         {
             "name": "PUID",
-            "label": "User plex id",
+            "label": "User tautulli id",
             "description": "1001"
         },
         {
             "name": "PGID",
-            "label": "User group plex id",
+            "label": "User group tautulli id",
             "description": "1001"
         },
         {

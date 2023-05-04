@@ -1,0 +1,39 @@
+# Docker-compose provided by Kevin Allioli
+# Last update : 04/05/2023
+
+# Environment variables to declare :
+#     - SERVICE : name of the service (example : pyload)
+#     - PUID : system user id (example : 1001)
+#     - PGID : system group id (example : 1001)
+#     - TZ : container time zone (example : Europe/Paris)
+#     - DATA_LOCATION : location of service data (example /app/"service")
+#     - DOWNLOAD_LOCATION : location of config.json file
+#     - FQDN : fully qualified domain name (example : pyload.domain.tld)
+
+# Work with Portainer
+
+version: "3.9"
+services:
+  pyload-ng:
+    image: lscr.io/linuxserver/pyload-ng:latest
+    container_name: $SERVICE
+    restart: unless-stopped
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+    volumes:
+      - $DATA_LOCATION/config:/config
+      - $DOWNLOAD_LOCATION:/downloads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.$SERVICE.entrypoints=https"
+      - "traefik.http.routers.$SERVICE.rule=Host(`$FQDN`)"
+      - "traefik.http.services.$SERVICE.loadbalancer.server.port=80"
+      - "traefik.docker.network=app-network"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    external: true
