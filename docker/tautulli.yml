@@ -21,6 +21,11 @@ services:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
+    healthcheck:
+      test: curl -ILfSs http://localhost:8181/status > /dev/null || curl -ILfkSs https://localhost:8181/status > /dev/null || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 3
     volumes:
       - $DATA_LOCATION:/config
     labels:
