@@ -18,6 +18,11 @@ services:
     image: lscr.io/linuxserver/pyload-ng:latest
     container_name: $SERVICE
     restart: unless-stopped
+    healthcheck:
+      test: curl --fail http://localhost:8000 || exit 1
+      interval: 10s
+      timeout: 55555s
+      retries: 3
     environment:
       - PUID=$PUID
       - PGID=$PGID
