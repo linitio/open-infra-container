@@ -1,0 +1,134 @@
+# Docker-compose provided by LinIT (Kevin Allioli)
+# Last update : 08/05/2023
+
+# Environment variables to declare :
+#     - SERVICE : service name (example : wordpress)
+#     - DB_HOST : database hostname (example : db)
+#     - DB_NAME : database name (example : wordpress)
+#     - DB_USER : database user (example : wordpress)
+#     - DB_PASS : database password
+#     - FQDN : fully qualified domain name (example : blog.domain.tld)
+#     - DATA_LOCATION : applications files location (example /app/"service")
+
+# Work with Portainer
+
+version: "3.9"
+services:
+  db:
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: $DB_PASS
+      MARIADB_DATABASE: $DB_NAME
+      MARIADB_USER: $DB_USER
+      MARIADB_PASSWORD: $DB_PASS
+    healthcheck:
+      test: mysqladmin ping -h localhost -u root --password=$DB_PASS
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+        - node.labels.general == true
+      update_config:
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+      labels:
+        - traefik.enable=false
+    volumes:
+      - $DATA_LOCATION/db:/var/lib/mysql
+    networks:
+      - network
+  
+  cache:
+    image: memcached
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+        - node.labels.general == true
+      update_config:
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+      labels:
+        - traefik.enable=false
+    networks:
+      - network
+
+  app:
+    image: wordpress
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: $DB_USER
+      WORDPRESS_DB_PASSWORD: $DB_PASS
+      WORDPRESS_DB_NAME: $DB_NAME
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+        - node.labels.general == true
+      update_config:
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik_network
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.$SERVICE.entrypoints=https
+        - traefik.http.routers.$SERVICE.rule=Host(`$FQDN`)
+        - traefik.http.services.$SERVICE.loadbalancer.server.port=80
+    depends_on:
+      - db
+    volumes:
+      - $DATA_LOCATION/app:/var/www/html
+    networks:
+      - traefik_network
+      - network
+    
+  backup:
+    image: tiredofit/db-backup
+    environment:
+      DB_TYPE: mariadb
+      DB_HOST: db
+      DB_NAME: $DB_NAME
+      DB_USER: $DB_USER
+      DB_PASS: "$DB_PASS"
+      DB_DUMP_FREQ: 1440
+      DB_DUMP_BEGIN: 0000
+      DB_CLEANUP_TIME: 8640
+      CHECKSUM: SHA1
+      COMPRESSION: ZSTD
+      SPLIT_DB: "FALSE"
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+        - node.labels.general == true
+      update_config:
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+      labels:
+        - traefik.enable=false
+    volumes:
+      - $DATA_LOCATION/backup:/backup
+     #- ./post-script.sh:/assets/custom-scripts/post-script.sh
+    depends_on:
+      - db
+    networks:
+      - network
+
+networks:
+  traefik_network:
+    external: true
+  network:
+    driver: overlay
+    attachable: true

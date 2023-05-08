@@ -797,6 +797,54 @@
     },
     {
         "type": 2,
+        "title": "Wordpress",
+        "description": "Authentication server",
+	    "note": "<p>Application website : <a href=\"https:\/\/keycloak.org\/\" target=\"_blank\" rel=\"noopener\">keycloak.org<\/a>",
+        "categories": [
+		    "website"
+        ],
+        "platform": "linux",
+        "logo": "https://raw.githubusercontent.com/linitio/open-infra-container/main/img/wordpress_logo.png",
+        "repository": {
+            "stackfile": "swarm/wordpress.yml",
+            "url": "https://github.com/linitio/open-infra-container"
+        },
+        "env": [{
+            "name": "SERVICE",
+            "label": "Service name",
+            "description": "example: wordpress",
+            "default": "wordpress"
+        },
+        {
+            "name": "DB_NAME",
+            "label": "Database name",
+            "description": "exemple : wordpress",
+            "default": "wordpress"
+        },
+        {
+            "name": "DB_USER",
+            "label": "Database username",
+            "description": "example: wordpress",
+            "default": "wordpress"
+        },
+        {
+            "name": "DB_PASS",
+            "label": "Database password"
+        },
+        {
+            "name": "DATA_LOCATION",
+            "label": "Data location",
+            "description": "example: /srv/wordpress",
+            "default": "/srv/wordpress"
+        },
+        {
+            "name": "FQDN",
+            "label": "Fully qualified domain name",
+            "description": "example : blog.domain.tld"
+        }]
+    },
+    {
+        "type": 2,
         "title": "YOURLS",
         "description": "URL Shortener",
         "note": "<p>Application website: <a href=\"https:\/\/yourls.org\/\" target=\"_blank\" rel=\"noopener\">yourls.org<\/a>",
