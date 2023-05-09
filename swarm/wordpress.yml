@@ -43,7 +43,7 @@ services:
     networks:
       - network
   
-  cache:
+  cache_memcached:
     image: memcached
     deploy:
       placement:
@@ -57,6 +57,30 @@ services:
         max_attempts: 5
       labels:
         - traefik.enable=false
+    networks:
+      - network
+  
+  cache_redis:
+    image: redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+        - node.labels.general == true
+      update_config:
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+      labels:
+        - traefik.enable=false
+    volumes:
+      - $DATA_LOCATION/cache/redis/data:/data
     networks:
       - network
 
