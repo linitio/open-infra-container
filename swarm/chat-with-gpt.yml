@@ -14,9 +14,9 @@ services:
   app:
     image: ghcr.io/cogentapps/chat-with-gpt:release
     healthcheck:
-      test: curl --connect-timeout 15 --max-time 100 --silent --show-error --fail "http://localhost:3000" > /dev/null
-      interval: 1m
-      timeout: 30s
+      test: grep -qr "npm" /proc/*/status || exit 1
+      interval: 10s
+      timeout: 5s
       retries: 3
     deploy:
       placement:
